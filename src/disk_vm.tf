@@ -2,7 +2,7 @@ resource "yandex_compute_disk" "vm_hdd_1gb" {
   count = 3
 
   name = "netology-yandex-hdd-${count.index + 1}"
-  size = 1
+  size = var.vpc_hdd
 }
 
 data "yandex_compute_image" "ubuntu_stor" {
@@ -14,9 +14,9 @@ resource "yandex_compute_instance" "storage" {
   platform_id = var.vm_platform_id
 
   resources {
-    cores         = 2
-    memory        = 1
-    core_fraction = 5
+    cores         = var.main.cores
+    memory        = var.main.memory
+    core_fraction = var.main.core_fraction
   }
 
   boot_disk {
@@ -43,6 +43,6 @@ resource "yandex_compute_instance" "storage" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "ubuntu:${var.ssh-keys}"
   }
 }
